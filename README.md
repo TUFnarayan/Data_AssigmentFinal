@@ -13,7 +13,8 @@ Uses requests to download:
 2.Sample Addresses → CSV → converted to JSON
 
 Uploads to S3 bucket: tuf-narayan-data-bucket using boto3.
-Code snippet:
+Code snippet:'=
+
 sources = [
   {"format": "json", "url": "https://api.tfl.gov.uk/Line/Mode/tube/Status", "path": "tube_status"},
   {"format": "csv", "url": "https://people.sc.fsu.edu/~jburkardt/data/csv/addresses.csv", "path": "store_products"}
@@ -27,6 +28,7 @@ File Format
 STRIP_OUTER_ARRAY=TRUE so each JSON element becomes a row.
 
 1.Raw Tables
+
 CREATE TABLE raw_store_json (
   rec VARIANT, src_filename STRING, file_row_number INT,
   load_ts TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP()
@@ -38,6 +40,7 @@ CREATE TABLE raw_tfl_tube_status (
 );
 
 2.Load from S3
+
 COPY INTO raw_store_json
 FROM (
   SELECT $1, METADATA$FILENAME, METADATA$FILE_ROW_NUMBER
