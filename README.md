@@ -53,6 +53,7 @@ FROM (
 
 # Views
 Store Products
+
 CREATE VIEW vw_store_simple AS
 SELECT
   LPAD(TRIM(rec:" 08075"::string),5,'0') AS zip_new,
@@ -64,6 +65,7 @@ SELECT
 FROM raw_store_json;
 
 tube status
+
 CREATE VIEW vw_tfl_tube_status_simple AS
 SELECT
   rec:id::string AS line_id,
@@ -73,7 +75,7 @@ SELECT
   rec:lineStatuses[0].statusSeverityDescription::string AS status_desc
 FROM raw_tfl_tube_status;
 
-@quick test
+# quick test
 1.SELECT * FROM vw_store_simple LIMIT 10;
 2.SELECT * FROM vw_tfl_tube_status_simple LIMIT 10;
 
