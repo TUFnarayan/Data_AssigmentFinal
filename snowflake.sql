@@ -1,3 +1,32 @@
+-- 1) Create Storage Integration (points Snowflake to your S3 via your IAM role)
+CREATE OR REPLACE STORAGE INTEGRATION aws_integration_data_pipeline
+  TYPE = EXTERNAL_STAGE
+  ENABLED = TRUE
+  STORAGE_PROVIDER = S3
+  STORAGE_ALLOWED_LOCATIONS = ('s3://tuf-narayan-data-bucket/')
+  STORAGE_AWS_ROLE_ARN = 'arn:aws:iam::539524425104:role/role1';
+
+-- 2) Describe Integration (copy Snowflake IAM ARN + External ID for AWS trust policy)
+DESC STORAGE INTEGRATION aws_integration_data_pipeline;
+
+-- 3) Use your DB/Schema
+USE DATABASE SNOWFLAKE_LEARNING_DB;
+USE SCHEMA PUBLIC;
+
+-- 4) Create Stage bound to the integration (your bucket)
+CREATE OR REPLACE STAGE aws_stage_data_pipeline
+  URL = 's3://tuf-narayan-data-bucket/'
+  STORAGE_INTEGRATION = aws_integration_data_pipeline;
+
+-- 5) Verify Stage (list S3 objects visible to Snowflake via integration)
+LIST @aws_stage_data_pipeline;
+
+
+
+
+
+
+
 -- Use DB & Schema
 USE DATABASE SNOWFLAKE_LEARNING_DB;
 USE SCHEMA PUBLIC;
@@ -85,6 +114,7 @@ SELECT
   TRY_TO_TIMESTAMP_NTZ(rec:lineStatuses[0].validityPeriods[0].toDate::string)   AS to_utc,
   COALESCE(rec:lineStatuses[0].validityPeriods[0].isNow::boolean, FALSE)        AS is_now
 FROM raw_tfl_tube_status;
+
 
 
 
